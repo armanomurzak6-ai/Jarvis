@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING, Callable
 
+from . import persona
 from .text_utils import normalize
 
 if TYPE_CHECKING:
@@ -53,6 +54,11 @@ def _confirm_test(assistant: "Assistant") -> str:
     return "Отменено, сэр."
 
 
+def _new_conversation(assistant: "Assistant") -> str:
+    assistant.brain.reset()
+    return persona.NEW_CONVERSATION
+
+
 def _exit(assistant: "Assistant") -> str:
     assistant.stop()
     return ""
@@ -64,6 +70,7 @@ COMMANDS: list[Command] = [
     Command(("дата", "какое сегодня число", "какой сегодня день"), "сегодняшняя дата", _date),
     Command(("статус", "состояние систем", "status"), "проверка настроек и ключей", _status),
     Command(("тест подтверждения",), "проверка диалога «да/нет»", _confirm_test),
+    Command(("новый разговор", "забудь", "сначала"), "забыть контекст разговора", _new_conversation),
     Command(("выход", "пока", "отключись", "exit", "quit"), "завершить работу", _exit),
 ]
 

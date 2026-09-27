@@ -16,6 +16,7 @@ class Config:
     anthropic_api_key: str | None
     picovoice_access_key: str | None
     model: str
+    effort: str
     tts_voice: str
     whisper_model: str
     log_level: str
@@ -60,7 +61,8 @@ def load_config(env_file: Path | None = None) -> Config:
     return Config(
         anthropic_api_key=_env("ANTHROPIC_API_KEY"),
         picovoice_access_key=_env("PICOVOICE_ACCESS_KEY"),
-        model=_env("JARVIS_MODEL", "claude-sonnet-5"),
+        model=_env("JARVIS_MODEL", "claude-opus-5"),
+        effort=_env("JARVIS_EFFORT", "medium"),
         tts_voice=_env("JARVIS_TTS_VOICE", "ru-RU-DmitryNeural"),
         whisper_model=_env("JARVIS_WHISPER_MODEL", "small"),
         log_level=_env("JARVIS_LOG_LEVEL", "INFO").upper(),

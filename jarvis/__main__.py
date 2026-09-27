@@ -8,9 +8,10 @@ import sys
 
 from . import __version__
 from .assistant import Assistant
-from .brain import StubBrain
+from .brain import Brain, ClaudeBrain, StubBrain
 from .config import Config, load_config
 from .interface import TextInput, TextOutput
+from .tools import default_registry
 
 
 def _setup_console() -> None:
@@ -47,7 +48,8 @@ def main(argv: list[str] | None = None) -> int:
     _setup_logging(config, args.debug)
 
     # Голосовой режим появится на шаге 5; до тех пор всегда текстовый.
-    assistant = Assistant(config, TextInput(), TextOutput(), StubBrain())
+    brain: Brain = ClaudeBrain(config, default_registry()) if config.anthropic_api_key else StubBrain()
+    assistant = Assistant(config, TextInput(), TextOutput(), brain)
     assistant.run()
     return 0
 

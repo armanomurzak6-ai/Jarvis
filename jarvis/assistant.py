@@ -9,6 +9,7 @@ from .brain import Brain
 from .commands import find_command
 from .config import Config
 from .interface import InputSource, OutputSink
+from .tools import ToolContext
 from .text_utils import is_stop, parse_yes_no, strip_wake_word
 
 log = logging.getLogger(__name__)
@@ -21,6 +22,7 @@ class Assistant:
         self.sink = sink
         self.brain = brain
         self._running = False
+        self.tool_context = ToolContext(config=config, confirm=self.confirm)
 
     def run(self) -> None:
         self._running = True
@@ -52,7 +54,7 @@ class Assistant:
             return command.handler(self)
 
         try:
-            return self.brain.respond(text)
+            return self.brain.respond(text, self.tool_context)
         except Exception:
             log.exception("Ошибка мозга")
             return "Сбой при обработке команды, сэр. Подробности в логе."
