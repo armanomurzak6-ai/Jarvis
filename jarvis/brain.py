@@ -55,9 +55,14 @@ class ClaudeBrain:
         self._messages.append({"role": "user", "content": text})
         try:
             return self._run(ctx)
-        except anthropic.AuthenticationError:
+        except anthropic.AuthenticationError as exc:
             self._rollback(checkpoint)
-            return "Ключ Claude API не принят, сэр. Проверьте ANTHROPIC_API_KEY в .env."
+            log.error("Claude API 401: %s (request_id=%s)", exc.message, exc.request_id)
+            return "Ключ Claude API не принят, сэр. Команда «статус» покажет, какой ключ я использую."
+        except anthropic.PermissionDeniedError as exc:
+            self._rollback(checkpoint)
+            log.error("Claude API 403: %s (request_id=%s)", exc.message, exc.request_id)
+            return f"Claude API отказал в доступе, сэр: {exc.message}"
         except anthropic.RateLimitError:
             self._rollback(checkpoint)
             return "Превышен лимит запросов к Claude, сэр. Попробуйте через минуту."

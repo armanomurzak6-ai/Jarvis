@@ -106,8 +106,24 @@ def test_run_loop_until_exit(config):
 
 
 def test_status_hides_key_value(config, monkeypatch, tmp_path):
-    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-secret")
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-api03-SECRETPART-xyz9")
     cfg = load_config(env_file=tmp_path / "missing.env")
     text = "\n".join(cfg.status_lines())
     assert "ANTHROPIC_API_KEY: есть" in text
-    assert "sk-secret" not in text
+    assert "SECRETPART" not in text
+
+
+def test_env_file_overrides_system_key(tmp_path, monkeypatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-ant-api03-old-system-key")
+    env = tmp_path / ".env"
+    env.write_text("ANTHROPIC_API_KEY=sk-ant-api03-new-key-from-env\n", encoding="utf-8")
+    cfg = load_config(env_file=env)
+    assert cfg.anthropic_api_key == "sk-ant-api03-new-key-from-env"
+    assert cfg.anthropic_key_source == ".env"
+
+
+def test_describe_key_flags_quotes():
+    from jarvis.config import describe_key
+
+    assert "кавычки" in describe_key('"sk-ant-api03-abcdef"')
+    assert "ВНИМАНИЕ" not in describe_key("sk-ant-api03-abcdefgh")
