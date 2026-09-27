@@ -1,0 +1,16 @@
+# Секреты
+.env
+
+# Личные данные (в репозитории только *.example.json)
+data/contacts.json
+data/tables.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Логи
+logs/

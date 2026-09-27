@@ -1,0 +1,12 @@
+# Шаг 1 — каркас
+python-dotenv>=1.0
+
+# Следующие шаги (раскомментировать по мере готовности):
+# anthropic          # шаг 2 — мозг
+# openpyxl           # шаг 3 — таблицы Excel
+# pywinauto          # шаг 4 — управление окнами
+# pyautogui          # шаг 4 — ввод с клавиатуры/мыши
+# pvporcupine        # шаг 5 — wake word
+# pvrecorder         # шаг 5 — микрофон
+# faster-whisper     # шаг 5 — распознавание речи
+# edge-tts           # шаг 5 — синтез речи
